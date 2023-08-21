@@ -1,7 +1,14 @@
+from datetime import datetime, timezone
+
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+
+def validate_datetime(timestamp):
+    if timestamp < datetime.now():
+        raise ValidationError("Date can't be in the past")
 
 
 # Create your models here.
@@ -16,18 +23,22 @@ class Event(models.Model):
     title = models.CharField(max_length=256)
     description = models.TextField(blank=True, null=True)
     participants = models.ManyToManyField("User", "joined_events", blank=True)
-    max_participants = models.PositiveSmallIntegerField(validators=[
+    max_participants = models.PositiveSmallIntegerField(default=8, validators=[
         MaxValueValidator(512, message="Events are currently limited to 512 participants max.")
     ])
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    signup_start = models.DateTimeField(auto_now_add=True)
-    signup_end = models.DateTimeField()
+    start_date = models.DateTimeField(validators=[MinValueValidator(datetime.now(timezone.utc).astimezone)])
+    end_date = models.DateTimeField(validators=[MinValueValidator(datetime.now(timezone.utc).astimezone)])
+    signup_start = models.DateTimeField(validators=[MinValueValidator(datetime.now(timezone.utc).astimezone)])
+    signup_end = models.DateTimeField(validators=[MinValueValidator(datetime.now(timezone.utc).astimezone)])
     deleted = models.BooleanField(default=False, blank=True)
     locked = models.BooleanField(default=False, blank=True)
 
     def clean(self):
         super().clean()
+        if self.start_date > self.end_date:
+            raise ValidationError("End date must be after start date")
+        if self.signup_start > self.signup_end:
+            raise ValidationError("Signup end date must be after signup start date")
         if self.signup_end > self.start_date:
             raise ValidationError("Signup end date can't be after event start.")
 
