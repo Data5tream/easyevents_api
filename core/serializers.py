@@ -6,6 +6,9 @@ from .models import Event, User
 class EventSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.username')
 
+    def create(self, validated_data):
+        return Event.objects.create(**validated_data)
+
     class Meta:
         model = Event
         fields = [
