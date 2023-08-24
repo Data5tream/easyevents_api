@@ -39,8 +39,14 @@ class EventDetails(APIView):
 
     def get(self, request, pk):
         event = self.get_object(pk)
-        serializer = EventSerializer(event)
-        return Response(serializer.data)
+
+        # This should not be necessary, as it should be handled by the `IsOwnerOrAdmin` permission, but the perm
+        # somehow doesn't work here, so we are using this workaround.
+        if event.creator == request.user or request.user.groups.filter(name="admin").exists():
+            serializer = EventSerializer(event)
+            return Response(serializer.data)
+
+        raise Http404
 
     def post(self, request):
         serializer = EventSerializer(data=request.data)
