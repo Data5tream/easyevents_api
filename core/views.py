@@ -22,13 +22,15 @@ class ProfileView(APIView):
 class EventList(generics.ListAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup, IsOwnerOrAdmin]
 
     def get_queryset(self):
         return Event.objects.filter(creator=self.request.user)
 
 
 class EventDetails(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup, IsOwnerOrAdmin]
+
     def get_object(self, pk):
         try:
             return Event.objects.get(pk=pk)
