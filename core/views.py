@@ -4,17 +4,19 @@ from rest_framework.views import APIView
 from rest_framework import generics, permissions, status
 
 from .models import Event
-from .permissions import IsOwnerOrAdmin
+from .permissions import IsOwnerOrAdmin, IsInOrganizerGroup
 from .serializers import UserSerializer, EventSerializer
 
 
 class ProfileView(APIView):
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrAdmin]
+    permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup]
 
     def get(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+        data = {
+            'username': request.user.username
+        }
+        return Response(data)
 
 
 class EventList(generics.ListAPIView):
