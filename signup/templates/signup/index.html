@@ -1,9 +1,22 @@
 {% extends 'signup/layout.html' %}
 
 {% block title %}
-Homepage
+Home
 {% endblock %}
 
 {% block body %}
-<h1>Hello world!</h1>
+    <div class="text-center">
+        <h1 class="mt-4 text-7xl md:text-7xl">Easy Events</h1>
+        <h2 class="mt-2 text-3xl md:text-5xl">A simple event planer app</h2>
+    </div>
+    <main class="max-w-xl mt-8 mx-auto px-2">
+        <div class="max-w-xl mt-8 py-4 px-6 mx-auto bg-slate-500 text-white rounded">
+            <p class="font-bold">If you are here to sign-up for an event, you are at the wrong place.</p>
+            <p>The event organizer has probably provided you with a wrong link.</p>
+        </div>
+        <p class="mt-8">
+            If you want to set up an event, you might want to head over to the
+            <a class="underline text-cyan-600" href="#">organizer app</a>.
+        </p>
+    </main>
 {% endblock %}
