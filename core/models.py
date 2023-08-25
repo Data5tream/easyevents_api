@@ -17,6 +17,12 @@ class User(AbstractUser):
 
 
 class Event(models.Model):
+    DEFAULT = 'signup/form_base.html'
+
+    TEMPLATE_CHOICES = [
+        (DEFAULT, 'Base'),
+    ]
+
     creator = models.ForeignKey("User", on_delete=models.PROTECT, related_name="created_events")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -33,6 +39,27 @@ class Event(models.Model):
     signup_end = models.DateTimeField()
     deleted = models.BooleanField(default=False, blank=True)
     locked = models.BooleanField(default=False, blank=True)
+    template = models.CharField(max_length=128, choices=TEMPLATE_CHOICES, default=DEFAULT)
+
+    @property
+    def signup_is_open(self):
+        return self.signup_start < datetime.now(timezone.utc) < self.signup_end
+
+    @property
+    def signup_not_open_yet(self):
+        return self.signup_start > datetime.now(timezone.utc)
+
+    @property
+    def signup_closed_event_not_started(self):
+        return self.signup_end < datetime.now(timezone.utc) < self.start_date
+
+    @property
+    def is_running(self):
+        return self.start_date < datetime.now(timezone.utc) < self.end_date
+
+    @property
+    def is_over(self):
+        return self.end_date < datetime.now(timezone.utc)
 
     def clean(self):
         super().clean()

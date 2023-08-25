@@ -1,0 +1,44 @@
+{% extends 'signup/layout.html' %}
+
+{% block title %}Sign up for {{ event.title }}{% endblock %}
+
+{% block body %}
+    <main class="max-w-xl mx-auto px-4">
+        <h1 class="text-center mt-3 mb-2 text-3xl md:text-5xl">{{ event.title }}</h1>
+        <p>{{ event.description }}</p>
+        {% if event.locked %}
+            <div class="mt-8 py-4 px-3 mx-auto bg-slate-500 text-white rounded">
+                <p class="font-bold">Signups for this event are currently closed.</p>
+                <p>Please contact the event organizer for questions.</p>
+            </div>
+        {% else %}
+            {% if event.signup_is_open %}
+                 <h3 class="text-center mt-8 mb-2 text-2xl md:text-4xl">Signup up</h3>
+                <form action="#" method="post" class="flex flex-col items-center gap-1">
+                    <input type="text" class="border rounded" name="name" placeholder="Your name" required/>
+                    <input type="text" class="border rounded" name="surname" placeholder="Your surname" required/>
+                    <input type="email" class="border rounded" name="email" placeholder="Your email" required/>
+                    <button type="submit"
+                            class="px-4 py-2 bg-green-600 border-green-600 hover:outline outline-green-200 text-white border border-2 rounded">
+                        Sign up
+                    </button>
+                </form>
+            {% else %}
+                <div class="mt-8 py-4 px-3 mx-auto bg-slate-500 text-white rounded">
+                    <p class="text-xl font-light mb-3">Signups are currently closed.</p>
+                    <p>
+                        {% if event.signup_not_open_yet %}
+                            Signups start at {{ event.signup_start }}
+                        {% elif event.signup_closed_event_not_started %}
+                            Signups are closed, event will begin at {{ event.start_date }}
+                        {% elif event.is_running %}
+                            Event is currently in progress.
+                        {% elif event.is_over %}
+                            Event has finished.
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </main>
+{% endblock %}
