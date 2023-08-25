@@ -16,7 +16,12 @@ class EventAdminForm(ModelForm):
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     form = EventAdminForm
+    filter_horizontal = ('participants',)
 
 
-admin.site.register(User)
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    filter_horizontal = ('groups', 'user_permissions')
+
+
 admin.site.register(EventUpdate)
