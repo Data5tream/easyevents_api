@@ -3,6 +3,12 @@ from rest_framework import serializers
 from .models import Event, User
 
 
+class ParticipantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email']
+
+
 class EventSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.username')
 
@@ -14,6 +20,18 @@ class EventSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'creator', 'title', 'description', 'max_participants',
             'start_date', 'end_date', 'signup_start', 'signup_end'
+        ]
+
+
+class EventDetailSerializer(serializers.ModelSerializer):
+    creator = serializers.ReadOnlyField(source='creator.username')
+    participants = ParticipantSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Event
+        fields = [
+            'id', 'creator', 'title', 'description', 'max_participants',
+            'start_date', 'end_date', 'signup_start', 'signup_end', 'participants'
         ]
 
 

@@ -5,7 +5,7 @@ from rest_framework import generics, permissions, status
 
 from .models import Event
 from .permissions import IsOwnerOrAdmin, IsInOrganizerGroup
-from .serializers import UserSerializer, EventSerializer
+from .serializers import UserSerializer, EventSerializer, EventDetailSerializer
 
 
 class ProfileView(APIView):
@@ -43,7 +43,7 @@ class EventDetails(APIView):
         # This should not be necessary, as it should be handled by the `IsOwnerOrAdmin` permission, but the perm
         # somehow doesn't work here, so we are using this workaround.
         if event.creator == request.user or request.user.groups.filter(name="admin").exists():
-            serializer = EventSerializer(event)
+            serializer = EventDetailSerializer(event)
             return Response(serializer.data)
 
         raise Http404
