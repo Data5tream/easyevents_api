@@ -23,7 +23,7 @@ class DashboardView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup]
 
     def get(self, request):
-        updates = EventUpdate.objects.filter(event__creator=request.user)
+        updates = EventUpdate.objects.filter(event__creator=request.user).order_by('-timestamp')[:10]
         events = Event.objects.filter(creator=request.user, deleted=False)
         update_serializer = EventUpdateSerializer(updates, many=True)
         events_serializer = EventSerializer(events, many=True)
