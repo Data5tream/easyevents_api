@@ -75,17 +75,21 @@ class Event(models.Model):
 
 
 class EventUpdate(models.Model):
+    DEFAULT_TYPE = 'joined'
+    EVENT_TYPES = [
+        (DEFAULT_TYPE, 'Joined'),
+        ('left', 'Left'),
+    ]
+
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="updates")
     event = models.ForeignKey("Event", on_delete=models.CASCADE, related_name="updates")
-    type = models.CharField(max_length=16)
+    event_type = models.CharField(max_length=16, choices=EVENT_TYPES, default=DEFAULT_TYPE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
         super().clean()
         if self.event.deleted or self.event.locked:
             raise ValidationError("Event not available")
-        if self.type not in ["joined", "left"]:
-            raise ValidationError("Invalid update type.")
 
     def __str__(self):
-        return f"{self.pk} - {self.user.username} {self.type} {self.event.title} ({self.event.pk})"
+        return f"{self.pk} - {self.user.username} {self.event_type} {self.event.title} ({self.event.pk})"

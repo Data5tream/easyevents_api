@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Event, User
+from .models import Event, User, EventUpdate
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
@@ -32,6 +32,17 @@ class EventDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'creator', 'title', 'description', 'max_participants',
             'start_date', 'end_date', 'signup_start', 'signup_end', 'participants'
+        ]
+
+
+class EventUpdateSerializer(serializers.ModelSerializer):
+    user = ParticipantSerializer(read_only=True)
+    event = EventSerializer(read_only=True)
+
+    class Meta:
+        model = EventUpdate
+        fields = [
+            'user', 'event', 'event_type', 'timestamp'
         ]
 
 
