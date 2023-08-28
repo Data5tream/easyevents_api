@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.views.generic import TemplateView, DetailView
 from rest_framework import status
 
-from core.models import Event
+from core.models import Event, EventUpdate
 
 
 # Create your views here.
