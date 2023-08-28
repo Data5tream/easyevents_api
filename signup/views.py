@@ -77,8 +77,13 @@ class RegisterView(TemplateView):
                 messages.add_message(request, messages.ERROR, 'Passwords don\'t match')
                 return render(request, self.template_name, {'next': next_url})
             try:
-                user = User.objects.create_user(form.cleaned_data['email'], form.cleaned_data['email'],
-                                                form.cleaned_data['password0'])
+                user = User.objects.create_user(
+                    username=form.cleaned_data['email'],
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password0'],
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name'],
+                )
             except IntegrityError:
                 messages.add_message(request, messages.ERROR, 'Email already registered')
                 return render(request, self.template_name, {'next': next_url})
