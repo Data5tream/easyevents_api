@@ -30,31 +30,34 @@
                     <form action="{% url 'signup_view' pk=event.pk title=event.title %}" method="post"
                           class="text-center">
                         {% csrf_token %}
-                        <button
-                                type="submit"
-                                class="px-4 py-2 bg-green-600 border-green-600 hover:outline outline-green-200 text-white border border-2 rounded"
-                        >
+                        <button type="submit" class="form-button">
                             Sign up
                         </button>
-                        <div class="mt-6 italic font-light">
-                            <p>You are logged in as <span class="font-normal">{{ user.email }}</span>.</p>
-                            <p>
-                                Not you? <a href="{% url 'logout' %}" class="font-normal underline text-cyan-600 hover:text-cyan-800">Log out</a>
-                            </p>
-                        </div>
                     </form>
                 {% else %}
-                    Needs to create account
+                    <div class="text-center"><p>Do you have an account with Easy Events? Log in now!</p>
+                    <h4 class="mt-4 mb-2 text-xl">Log into existing account</h4>
+                    <form action="{% url 'login' %}" method="post" class="flex flex-col items-center gap-1">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <input type="email" class="form-input" name="username" placeholder="Your email" aria-label="Email" required/>
+                        <input type="password" class="form-input" name="password" placeholder="Your password" aria-label="Password" required/>
+                        <button type="submit" class="form-button">
+                            Login
+                        </button>
+                    </form>
+                    <div class="mt-6 mb-5">or</div>
+                    <h4 class="mb-2 text-xl">Create a new account</h4>
                     <form action="#" method="post" class="flex flex-col items-center gap-1">
                         {% csrf_token %}
-                        <input type="text" class="border rounded" name="name" placeholder="Your name" required/>
-                        <input type="text" class="border rounded" name="surname" placeholder="Your surname" required/>
-                        <input type="email" class="border rounded" name="email" placeholder="Your email" required/>
-                        <button type="submit"
-                                class="px-4 py-2 bg-green-600 border-green-600 hover:outline outline-green-200 text-white border border-2 rounded">
+                        <input type="text" class="form-input" name="first_name" placeholder="Your name" required/>
+                        <input type="text" class="form-input" name="last_name" placeholder="Your surname" required/>
+                        <input type="email" class="form-input" name="email" placeholder="Your email" required/>
+                        <button type="submit" class="form-button">
                             Sign up
                         </button>
                     </form>
+                    </div>
                 {% endif %}
 
             {% else %}
@@ -73,6 +76,18 @@
                     </p>
                 </div>
             {% endif %}
+        {% endif %}
+        {% if user.is_authenticated %}
+            <div class="mt-6 italic font-light">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                <p>You are logged in as <span class="font-normal">{{ user.email }}</span>.</p>
+                <p>
+                    Not you? <button class="font-normal underline text-cyan-600 hover:text-cyan-800">Log out</button>
+                </p>
+                </form>
+            </div>
         {% endif %}
     </main>
 {% endblock %}

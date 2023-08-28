@@ -1,0 +1,23 @@
+{% extends 'signup/modal_layout.html' %}
+
+{% block modal %}
+    <div class="text-center">
+        <h1 class="text-5xl">Easy Events</h1>
+        <h2 class="text-3xl font-light mb-3">Login</h2>
+        <form action="{% url 'login' %}" method="post" class="flex flex-col items-center gap-1">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            {% if form.errors %}
+                <div class="rounded px-2 py-4 mb-4 bg-red-400 text-red-950 font-bold">
+                    Your username and password didn't match. Please try again.
+                </div>
+            {% endif %}
+            <input type="email" class="form-input" name="username" placeholder="Your email" aria-label="Email" required/>
+            <input type="password" class="form-input" name="password" placeholder="Your password" aria-label="Password" required/>
+            <button type="submit" class="form-button">Login</button>
+        </form>
+        {% if next %}
+            <span class="block mt-5 italic font-light">You will be redirected after the login.</span>
+        {% endif %}
+    </div>
+{% endblock %}

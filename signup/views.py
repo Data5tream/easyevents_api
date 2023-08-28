@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.views import LogoutView
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, DetailView
@@ -52,7 +51,3 @@ class SignupView(DetailView):
                 messages.add_message(request, messages.INFO, 'Already signed up for event.')
 
         return redirect('signup_view', pk=pk, title=title)
-
-
-class EventsLogoutView(LogoutView):
-    template_name = 'signup/logout.html'
