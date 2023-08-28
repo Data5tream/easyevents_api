@@ -78,6 +78,7 @@ class EventUpdate(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="updates")
     event = models.ForeignKey("Event", on_delete=models.CASCADE, related_name="updates")
     type = models.CharField(max_length=16)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
         super().clean()
