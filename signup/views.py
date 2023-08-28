@@ -69,7 +69,7 @@ class RegisterView(TemplateView):
 
     def post(self, request):
         form = RegistrationForm(request.POST)
-        next_url = form.cleaned_data['next'] if 'next' in form.cleaned_data else ''
+        next_url = request.POST['next'] if 'next' in request.POST else ''
 
         if form.is_valid():
 
@@ -77,7 +77,8 @@ class RegisterView(TemplateView):
                 messages.add_message(request, messages.ERROR, 'Passwords don\'t match')
                 return render(request, self.template_name, {'next': next_url})
             try:
-                user = User.objects.create_user(form.cleaned_data['email'], form.cleaned_data['password0'])
+                user = User.objects.create_user(form.cleaned_data['email'], form.cleaned_data['email'],
+                                                form.cleaned_data['password0'])
             except IntegrityError:
                 messages.add_message(request, messages.ERROR, 'Email already registered')
                 return render(request, self.template_name, {'next': next_url})
