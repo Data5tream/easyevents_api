@@ -23,6 +23,11 @@
                 <p class="font-bold">Signups for this event are currently closed.</p>
                 <p>Please contact the event organizer for questions.</p>
             </div>
+        {% elif event.is_full %}
+            <div class="mt-8 py-4 px-3 mx-auto bg-slate-500 text-white rounded">
+                <p class="font-bold">This event is full.</p>
+                <p>Please contact the event organizer for questions.</p>
+            </div>
         {% else %}
             {% if event.signup_is_open %}
                 <h3 class="text-center mt-8 mb-2 text-2xl md:text-4xl">Signup now</h3>
