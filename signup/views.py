@@ -1,10 +1,13 @@
 from django.contrib import messages
+from django import forms
+from django.contrib.auth import login
+from django.db import IntegrityError
 from django.http import HttpResponse, Http404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView, DetailView
 from rest_framework import status
 
-from core.models import Event, EventUpdate
+from core.models import Event, EventUpdate, User
 
 
 # Create your views here.
@@ -51,3 +54,35 @@ class SignupView(DetailView):
                 messages.add_message(request, messages.INFO, 'Already signed up for event.')
 
         return redirect('signup_view', pk=pk, title=title)
+
+
+class RegistrationForm(forms.Form):
+    first_name = forms.CharField(max_length=64)
+    last_name = forms.CharField(max_length=64)
+    email = forms.EmailField()
+    password0 = forms.CharField(min_length=8)
+    password1 = forms.CharField(min_length=8)
+
+
+class RegisterView(TemplateView):
+    template_name = 'signup/register.html'
+
+    def post(self, request):
+        form = RegistrationForm(request.POST)
+        next_url = form.cleaned_data['next'] if 'next' in form.cleaned_data else ''
+
+        if form.is_valid():
+
+            if form.cleaned_data['password0'] != form.cleaned_data['password1']:
+                messages.add_message(request, messages.ERROR, 'Passwords don\'t match')
+                return render(request, self.template_name, {'next': next_url})
+            try:
+                user = User.objects.create_user(form.cleaned_data['email'], form.cleaned_data['password0'])
+            except IntegrityError:
+                messages.add_message(request, messages.ERROR, 'Email already registered')
+                return render(request, self.template_name, {'next': next_url})
+
+            login(request, user)
+            return redirect(next_url)
+
+        return render(request, self.template_name, {'form': form, 'next': next_url})

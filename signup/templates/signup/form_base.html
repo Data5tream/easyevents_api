@@ -36,27 +36,38 @@
                     </form>
                 {% else %}
                     <div class="text-center"><p>Do you have an account with Easy Events? Log in now!</p>
-                    <h4 class="mt-4 mb-2 text-xl">Log into existing account</h4>
-                    <form action="{% url 'login' %}" method="post" class="flex flex-col items-center gap-1">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ request.path }}">
-                        <input type="email" class="form-input" name="username" placeholder="Your email" aria-label="Email" required/>
-                        <input type="password" class="form-input" name="password" placeholder="Your password" aria-label="Password" required/>
-                        <button type="submit" class="form-button">
-                            Login
-                        </button>
-                    </form>
-                    <div class="mt-6 mb-5">or</div>
-                    <h4 class="mb-2 text-xl">Create a new account</h4>
-                    <form action="#" method="post" class="flex flex-col items-center gap-1">
-                        {% csrf_token %}
-                        <input type="text" class="form-input" name="first_name" placeholder="Your name" required/>
-                        <input type="text" class="form-input" name="last_name" placeholder="Your surname" required/>
-                        <input type="email" class="form-input" name="email" placeholder="Your email" required/>
-                        <button type="submit" class="form-button">
-                            Sign up
-                        </button>
-                    </form>
+                        <h4 class="mt-4 mb-2 text-xl">Log into existing account</h4>
+                        <form action="{% url 'login' %}" method="post" class="flex flex-col items-center gap-1">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <input type="email" class="form-input" name="username" placeholder="Your email"
+                                   aria-label="Email" required/>
+                            <input type="password" class="form-input" name="password" placeholder="Your password"
+                                   aria-label="Password" required/>
+                            <button type="submit" class="form-button">
+                                Login
+                            </button>
+                        </form>
+                        <div class="mt-6 mb-5">or</div>
+                        <h4 class="mb-2 text-xl">Create a new account</h4>
+                        <form action="{% url 'register' %}" method="post" class="flex flex-col items-center gap-1">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <input type="text" class="form-input" name="first_name" placeholder="Your first name"
+                                   aria-label="First name" required/>
+                            <input type="text" class="form-input" name="last_name" placeholder="Your last name"
+                                   aria-label="Last name" required/>
+                            <input type="email" class="form-input" name="email" placeholder="Your email"
+                                   aria-label="Email" required/>
+                            <input type="password" class="form-input" name="password0" placeholder="Your password"
+                                   aria-label="Password"
+                                   required/>
+                            <input type="password" class="form-input" name="password1" placeholder="Repeat password"
+                                   aria-label="Repeat password" required/>
+                            <button type="submit" class="form-button">
+                                Sign up
+                            </button>
+                        </form>
                     </div>
                 {% endif %}
 

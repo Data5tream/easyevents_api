@@ -2,6 +2,15 @@
 
 {% block body %}
     <div class="container mx-auto mt-8">
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li class="rounded my-2 p-2 {% if message.level == 40 %}bg-red-700{% else %}bg-slate-500{% endif %} text-white">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         {% block modal %}
         {% endblock %}
     </div>

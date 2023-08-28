@@ -1,0 +1,33 @@
+{% extends 'signup/modal_layout.html' %}
+
+{% block modal %}
+    <div class="text-center">
+        <h1 class="text-5xl">Easy Events</h1>
+        <h2 class="text-3xl font-light mb-3">Registration</h2>
+        <form action="{% url 'register' %}" method="post" class="flex flex-col items-center gap-1">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            {% for error in form.errors %}
+                <div class="rounded px-2 py-4 mb-4 bg-red-400 text-red-950 font-bold">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            <input type="text" class="form-input" name="first_name" placeholder="Your first name"
+                   aria-label="First name" required/>
+            <input type="text" class="form-input" name="last_name" placeholder="Your last name"
+                   aria-label="Last name" required/>
+            <input type="email" class="form-input" name="email" placeholder="Your email"
+                   aria-label="Email" required/>
+            <input type="password" class="form-input" name="password0" placeholder="Your password" aria-label="Password"
+                   required/>
+            <input type="password" class="form-input" name="password1" placeholder="Repeat password"
+                   aria-label="Repeat password" required/>
+            <button type="submit" class="form-button">
+                Sign up
+            </button>
+        </form>
+        {% if next %}
+            <span class="block mt-5 italic font-light">You will be redirected after the login.</span>
+        {% endif %}
+    </div>
+{% endblock %}
