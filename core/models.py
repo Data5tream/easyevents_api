@@ -21,6 +21,7 @@ class Event(models.Model):
 
     TEMPLATE_CHOICES = [
         (DEFAULT, 'Base'),
+        ('signup/form_dark.html', 'Dark'),
     ]
 
     creator = models.ForeignKey("User", on_delete=models.PROTECT, related_name="created_events")

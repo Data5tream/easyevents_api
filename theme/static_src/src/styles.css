@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.form-button {
+    @apply mt-2 px-4 py-2 bg-green-600 border-green-600 hover:outline outline-green-200 text-white border-2 rounded;
+}
+
+.form-input {
+    @apply border rounded;
+}
+
+.ee-dark-theme {
+    @apply bg-zinc-900 text-white;
+
+    .form-input {
+        @apply text-black;
+    }
+}
