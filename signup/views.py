@@ -32,7 +32,9 @@ class SignupView(DetailView):
         except Event.DoesNotExist:
             raise Http404
 
-        if event.signup_is_open:
+        if event.creator == request.user:
+            messages.add_message(request, messages.ERROR, 'Can\'t join an event you have created.')
+        elif event.signup_is_open:
             if request.user not in event.participants.all():
                 event.participants.add(request.user)
                 event.save()
