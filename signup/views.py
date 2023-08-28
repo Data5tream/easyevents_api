@@ -36,8 +36,17 @@ class SignupView(DetailView):
             messages.add_message(request, messages.ERROR, 'Can\'t join an event you have created.')
         elif event.signup_is_open:
             if request.user not in event.participants.all():
+                # Add user to event participants
                 event.participants.add(request.user)
                 event.save()
+
+                # Create event update
+                event_update = EventUpdate()
+                event_update.user = request.user
+                event_update.event = event
+                event_update.type = 'joined'
+                event_update.save()
+
                 messages.add_message(request, messages.SUCCESS, 'Successfully joined event.')
             else:
                 messages.add_message(request, messages.INFO, 'Already signed up for event.')
