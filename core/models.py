@@ -78,6 +78,9 @@ class Event(models.Model):
     def __str__(self):
         return f"{self.pk} - \"{self.title}\" by {self.creator.username}"
 
+    class Meta:
+        ordering = ['-created']
+
 
 class EventUpdate(models.Model):
     DEFAULT_TYPE = 'joined'
