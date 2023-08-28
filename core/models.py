@@ -66,6 +66,9 @@ class Event(models.Model):
     def is_full(self):
         return self.max_participants <= self.participants.count()
 
+    def available_seats(self):
+        return self.max_participants - self.participants.count()
+
     def clean(self):
         super().clean()
         if self.start_date > self.end_date:
