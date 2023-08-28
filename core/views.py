@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, permissions, status
 
-from .models import Event
+from .models import Event, EventUpdate
 from .permissions import IsOwnerOrAdmin, IsInOrganizerGroup
-from .serializers import UserSerializer, EventSerializer, EventDetailSerializer
+from .serializers import UserSerializer, EventSerializer, EventDetailSerializer, EventUpdateSerializer
 
 
 class ProfileView(APIView):
@@ -17,6 +17,21 @@ class ProfileView(APIView):
             'username': request.user.username
         }
         return Response(data)
+
+
+class DashboardView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup]
+
+    def get(self, request):
+        updates = EventUpdate.objects.filter(event__creator=request.user)
+        events = Event.objects.filter(creator=request.user, deleted=False)
+        update_serializer = EventUpdateSerializer(updates, many=True)
+        events_serializer = EventSerializer(events, many=True)
+
+        return Response(data={
+            'updates': update_serializer.data,
+            'events': events_serializer.data
+        })
 
 
 class EventList(generics.ListAPIView):
