@@ -93,10 +93,11 @@
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.path }}">
-                <p>You are logged in as <span class="font-normal">{{ user.email }}</span>.</p>
-                <p>
-                    Not you? <button class="font-normal underline text-cyan-600 hover:text-cyan-800">Log out</button>
-                </p>
+                    <p>You are logged in as <span class="font-normal">{{ user.email }}</span>.</p>
+                    <p>
+                        Not you?
+                        <button class="font-normal underline text-cyan-600 hover:text-cyan-800">Log out</button>
+                    </p>
                 </form>
             </div>
         {% endif %}
