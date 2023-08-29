@@ -1,4 +1,6 @@
-from django.http import Http404
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.http import Http404, HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, permissions, status
@@ -66,3 +68,16 @@ class EventDetails(APIView):
             serializer.save(creator=self.request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePassword(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup]
+
+    def post(self, request):
+        form = PasswordChangeForm(user=request.user, data=request.data)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+        return HttpResponse(form.error_messages, status=status.HTTP_400_BAD_REQUEST)
