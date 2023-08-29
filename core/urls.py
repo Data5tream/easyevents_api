@@ -9,4 +9,5 @@ urlpatterns = [
     path('event/new', views.EventDetails.as_view(), name='create_event'),
     path('event/<int:pk>', views.EventDetails.as_view(), name='event_details'),
     path('account/change_password', views.ChangePassword.as_view(), name='change_password'),
+    path('account/details', views.ChangeAccountDetails.as_view(), name='change_details'),
 ]

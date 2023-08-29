@@ -1,5 +1,6 @@
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.forms import forms, CharField
 from django.http import Http404, HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -81,3 +82,23 @@ class ChangePassword(APIView):
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
         return HttpResponse(form.error_messages, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateAccountDetails(forms.Form):
+    first_name = CharField(min_length=1, max_length=64)
+    last_name = CharField(min_length=1, max_length=64)
+
+
+class ChangeAccountDetails(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup]
+
+    def post(self, request):
+        form = UpdateAccountDetails(request.data)
+        if form.is_valid():
+            request.user.first_name = form.cleaned_data['first_name']
+            request.user.last_name = form.cleaned_data['last_name']
+            request.user.save()
+
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
