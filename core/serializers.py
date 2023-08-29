@@ -47,9 +47,6 @@ class EventUpdateSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    created_events = EventSerializer(many=True, read_only=True)
-    joined_events = EventSerializer(many=True, read_only=True)
-
     class Meta:
         model = User
-        fields = ['id', 'username', 'created_events', 'joined_events']
+        fields = ['id', 'first_name', 'last_name', 'email', 'created_events', 'joined_events']

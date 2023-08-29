@@ -9,14 +9,11 @@ from .serializers import UserSerializer, EventSerializer, EventDetailSerializer,
 
 
 class ProfileView(APIView):
-    serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup]
 
     def get(self, request):
-        data = {
-            'username': request.user.username
-        }
-        return Response(data)
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
 
 
 class DashboardView(APIView):
