@@ -1,5 +1,5 @@
-from django.contrib import messages
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import login
 from django.db import IntegrityError
 from django.http import HttpResponse, Http404

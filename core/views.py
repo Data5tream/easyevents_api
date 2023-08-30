@@ -2,9 +2,9 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.forms import forms, CharField
 from django.http import Http404, HttpResponse
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import generics, permissions, status
 
 from .models import Event, EventUpdate
 from .permissions import IsOwnerOrAdmin, IsInOrganizerGroup
