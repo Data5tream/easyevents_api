@@ -70,6 +70,18 @@ class EventDetails(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def put(self, request, pk):
+        event = self.get_object(pk)
+        if not event.creator == request.user and not request.user.groups.filter(name="admin").exists():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = EventSerializer(event, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ChangePassword(APIView):
     permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup]

@@ -19,7 +19,7 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = [
             'id', 'creator', 'title', 'description', 'details_url', 'max_participants',
-            'start_date', 'end_date', 'signup_start', 'signup_end', 'participants'
+            'start_date', 'end_date', 'signup_start', 'signup_end', 'template', 'participants'
         ]
 
 
