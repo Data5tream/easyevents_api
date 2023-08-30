@@ -23,15 +23,27 @@ class EventSerializer(serializers.ModelSerializer):
         ]
 
 
+class EventUpdateLightSerializer(serializers.ModelSerializer):
+    user = ParticipantSerializer(read_only=True)
+
+    class Meta:
+        model = EventUpdate
+
+        fields = [
+            'user', 'event_type', 'timestamp'
+        ]
+
+
 class EventDetailSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.username')
     participants = ParticipantSerializer(many=True, read_only=True)
+    updates = EventUpdateLightSerializer(many=True, read_only=True)
 
     class Meta:
         model = Event
         fields = [
             'id', 'creator', 'title', 'description', 'details_url', 'max_participants',
-            'start_date', 'end_date', 'signup_start', 'signup_end', 'template', 'participants'
+            'start_date', 'end_date', 'signup_start', 'signup_end', 'template', 'participants', 'updates'
         ]
 
 

@@ -107,3 +107,6 @@ class EventUpdate(models.Model):
 
     def __str__(self):
         return f"{self.pk} - {self.user.username} {self.event_type} {self.event.title} ({self.event.pk})"
+
+    class Meta:
+        ordering = ['-timestamp']
