@@ -17,3 +17,15 @@
         @apply text-black;
     }
 }
+
+.ee-mild-theme {
+    background: #fffff5;
+
+    h1, h2, h3, h4, h5, h6 {
+        color: #966933;
+    }
+
+    .form-input, .form-button {
+        @apply rounded-none;
+    }
+}
