@@ -11,7 +11,10 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <h1 class="text-center mt-3 mb-2 text-3xl md:text-5xl">{{ event.title }}</h1>
+        <h1 class="text-center mt-3 mb-2 text-3xl md:text-5xl font-light">{{ event.title }}</h1>
+        <h2 class="text-center mb-5">
+            by <span class="font-bold">{{ event.creator.first_name }} {{ event.creator.last_name }}</span>
+        </h2>
         <p>{{ event.description }}</p>
         {% if already_joined %}
             <div class="mt-6 rounded bg-slate-500 text-white p-2">
