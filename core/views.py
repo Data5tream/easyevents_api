@@ -132,6 +132,11 @@ class EventParticipants(APIView):
 
         for participant in request.data['participants']:
             event.participants.remove(participant)
+
+            # Create event updates for the kick
+            update = EventUpdate(user_id=participant, event_type='kicked', event=event)
+            update.save()
+
         event.save()
 
         return Response(status=status.HTTP_200_OK)
