@@ -18,7 +18,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = [
-            'id', 'creator', 'title', 'description', 'max_participants',
+            'id', 'creator', 'title', 'description', 'details_url', 'max_participants',
             'start_date', 'end_date', 'signup_start', 'signup_end', 'participants'
         ]
 
@@ -30,8 +30,8 @@ class EventDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = [
-            'id', 'creator', 'title', 'description', 'max_participants',
-            'start_date', 'end_date', 'signup_start', 'signup_end', 'participants'
+            'id', 'creator', 'title', 'description', 'details_url', 'max_participants',
+            'start_date', 'end_date', 'signup_start', 'signup_end', 'template', 'participants'
         ]
 
 
