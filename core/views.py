@@ -114,3 +114,24 @@ class ChangeAccountDetails(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class EventParticipants(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsInOrganizerGroup]
+
+    def get_object(self, pk):
+        try:
+            return Event.objects.get(pk=pk)
+        except Event.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, pk):
+        event = self.get_object(pk)
+        if not event.creator == request.user and not request.user.groups.filter(name="admin").exists():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        for participant in request.data['participants']:
+            event.participants.remove(participant)
+        event.save()
+
+        return Response(status=status.HTTP_200_OK)
