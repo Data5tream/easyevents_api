@@ -16,18 +16,27 @@
             by <span class="font-bold">{{ event.creator.first_name }} {{ event.creator.last_name }}</span>
         </h2>
         <p>{{ event.description }}</p>
+        {% if event.details_url %}
+            <div class="my-2">
+                For more details please visit:
+                <a href="{{ event.details_url }}" class="font-normal underline text-cyan-600 hover:text-cyan-800">
+                    {{ event.details_url }}
+                </a>
+            </div>
+        {% endif %}
+        <hr class="my-6">
         {% if already_joined %}
-            <div class="mt-6 rounded bg-slate-500 text-white p-2">
+            <div class="rounded bg-slate-500 text-white p-2">
                 <p class="font-light text-xl mb-2">You have signed up for this event.</p>
                 <p>The event will start at {{ event.start_date }}</p>
             </div>
         {% elif event.locked %}
-            <div class="mt-8 py-4 px-3 mx-auto bg-slate-500 text-white rounded">
+            <div class="py-4 px-3 mx-auto bg-slate-500 text-white rounded">
                 <p class="font-bold">Signups for this event are currently closed.</p>
                 <p>Please contact the event organizer for questions.</p>
             </div>
         {% elif event.is_full %}
-            <div class="mt-8 py-4 px-3 mx-auto bg-slate-500 text-white rounded">
+            <div class="py-4 px-3 mx-auto bg-slate-500 text-white rounded">
                 <p class="font-bold">This event is full.</p>
                 <p>Please contact the event organizer for questions.</p>
             </div>

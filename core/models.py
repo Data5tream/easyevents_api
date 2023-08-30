@@ -41,6 +41,7 @@ class Event(models.Model):
     deleted = models.BooleanField(default=False, blank=True)
     locked = models.BooleanField(default=False, blank=True)
     template = models.CharField(max_length=128, choices=TEMPLATE_CHOICES, default=DEFAULT)
+    details_url = models.URLField(blank=True, null=True)
 
     @property
     def signup_is_open(self):
