@@ -1,10 +1,18 @@
 {% extends 'signup/modal_layout.html' %}
 
+{% block title %}
+    Account confirmation
+{% endblock %}
+
 {% block modal %}
-    {% if error and error == 'invalid_code' %}
-        <p>Invalid confirmation code</p>
-    {% else %}
-        <p>Account confirmed correctly</p>
-        <p><a href="{{ next }}">Continue</a></p>
-    {% endif %}
+    <div class="text-center">
+        <h1 class="mb-4 text-3xl">Easy Events</h1>
+        {% if error and error == 'invalid_code' %}
+            <h2 class="text-2xl">Invalid confirmation code</h2>
+            <p>The confirmation code might be too old or has already used.</p>
+        {% else %}
+            <h2 class="text-2xl">Account confirmed correctly. You can now log in</h2>
+            <p><a href="{{ next }}">Continue</a></p>
+        {% endif %}
+    </div>
 {% endblock %}
