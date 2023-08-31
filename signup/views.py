@@ -70,6 +70,42 @@ class SignupView(DetailView):
 
         return redirect('signup_view', pk=pk, title=title)
 
+    def delete(self, request, pk, title):
+        if not request.user.is_authenticated or not request.user.can_interact:
+            return HttpResponse(status=status.HTTP_403_FORBIDDEN)
+        try:
+            event = Event.objects.get(pk=pk, deleted=False)
+        except Event.DoesNotExist:
+            raise Http404
+
+        if event.signup_is_open:
+            if request.user in event.participants.all():
+                # Remove user from event participants
+                event.participants.remove(request.user)
+                event.save()
+
+                # Create event update
+                event_update = EventUpdate()
+                event_update.user = request.user
+                event_update.event = event
+                event_update.type = 'left'
+                event_update.save()
+
+                # Send event signup mail
+                send_mail(
+                    f'Left event {event.title} on Easy Events',
+                    'TEST',
+                    'test@localhost',
+                    [request.user.email],
+                    fail_silently=False,
+                )
+
+                messages.add_message(request, messages.SUCCESS, 'Successfully left event.')
+        else:
+            messages.add_message(request, messages.ERROR, 'Can\'t leave the event, because the signup has finished.')
+
+        return redirect('signup_view', pk=pk, title=title)
+
 
 class RegistrationForm(forms.Form):
     first_name = forms.CharField(max_length=64)
