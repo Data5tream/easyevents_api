@@ -29,7 +29,7 @@ class SignupView(DetailView):
         return context
 
     def post(self, request, pk, title):
-        if not request.user.is_authenticated or not request.user.is_active or not request.user.confirmed:
+        if not request.user.is_authenticated or not request.user.can_interact:
             return HttpResponse(status=status.HTTP_403_FORBIDDEN)
 
         try:

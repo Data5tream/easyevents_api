@@ -15,6 +15,10 @@ def validate_datetime(timestamp):
 class User(AbstractUser):
     confirmed = models.BooleanField(default=False, blank=True)
 
+    @property
+    def can_interact(self):
+        return self.is_active and self.confirmed
+
 
 class UserConfirmationCode(models.Model):
     code = models.CharField(max_length=64)
