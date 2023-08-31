@@ -22,6 +22,9 @@ class UserConfirmationCode(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     used = models.BooleanField(default=False, blank=True)
 
+    def __str__(self):
+        return f"{self.user.email} ({'Used' if self.used else 'Not used'}): {self.code}"
+
 
 class Event(models.Model):
     DEFAULT = 'signup/form_base.html'

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.forms import widgets, ModelForm
 
-from .models import User, Event, EventUpdate
+from .models import User, Event, EventUpdate, UserConfirmationCode
 
 
 class EventAdminForm(ModelForm):
@@ -25,3 +25,4 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(EventUpdate)
+admin.site.register(UserConfirmationCode)
