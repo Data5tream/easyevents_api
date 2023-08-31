@@ -13,7 +13,14 @@ def validate_datetime(timestamp):
 
 # Create your models here.
 class User(AbstractUser):
-    pass
+    confirmed = models.BooleanField(default=False, blank=True)
+
+
+class UserConfirmationCode(models.Model):
+    code = models.CharField(max_length=64)
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="confirmation_codes")
+    created = models.DateTimeField(auto_now_add=True)
+    used = models.BooleanField(default=False, blank=True)
 
 
 class Event(models.Model):
