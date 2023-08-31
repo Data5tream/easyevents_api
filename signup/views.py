@@ -1,13 +1,16 @@
+from secrets import token_urlsafe
+
 from django import forms
 from django.contrib import messages
-from django.contrib.auth import login
+from django.core.mail import send_mail
 from django.db import IntegrityError
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.generic import TemplateView, DetailView
 from rest_framework import status
 
-from core.models import Event, EventUpdate, User
+from core.models import Event, EventUpdate, User, UserConfirmationCode
 
 
 # Create your views here.
@@ -26,7 +29,7 @@ class SignupView(DetailView):
         return context
 
     def post(self, request, pk, title):
-        if not request.user.is_authenticated:
+        if not request.user.is_authenticated or not request.user.is_active or not request.user.confirmed:
             return HttpResponse(status=status.HTTP_403_FORBIDDEN)
 
         try:
@@ -50,6 +53,16 @@ class SignupView(DetailView):
                 event_update.event = event
                 event_update.type = 'joined'
                 event_update.save()
+
+                # Send event signup mail
+                send_mail(
+                    f'Joined event {event.title} on Easy Events',
+                    'TEST',
+                    'test@localhost',
+                    [request.user.email],
+                    fail_silently=False,
+                    html_message=''
+                )
 
                 messages.add_message(request, messages.SUCCESS, 'Successfully joined event.')
             else:
@@ -90,7 +103,41 @@ class RegisterView(TemplateView):
                 messages.add_message(request, messages.ERROR, 'Email already registered')
                 return render(request, self.template_name, {'next': next_url})
 
-            login(request, user)
-            return redirect(next_url)
+            code = UserConfirmationCode(user=user, code=token_urlsafe(32))
+            code.save()
+
+            signup_link = f"{reverse('confirm_register')}?code={code.code}&next={next_url}"
+
+            send_mail(
+                'Easy Events Account Registration',
+                f'To activate your Easy Events account open the following link:\n{signup_link}\n\nIf you haven\'t signed up for Easy Events you can safely ignore this email.',
+                'noreply@easyevents.io',
+                [user.email]
+            )
+
+            return render(request, 'signup/register_require_confirm.html')
 
         return render(request, self.template_name, {'form': form, 'next': next_url})
+
+
+class ConfirmRegister(TemplateView):
+    template_name = 'signup/register_confirmation.html'
+
+    def get(self, request):
+        if request.GET.get('code'):
+            try:
+                code = UserConfirmationCode.objects.get(code=request.GET.get('code'), used=False)
+            except UserConfirmationCode.DoesNotExist:
+                return render(request, self.template_name, {'error': 'invalid_code'})
+
+            code.user.confirmed = True
+            code.user.save()
+
+            code.used = True
+            code.save()
+
+            next_url = request.GET.get('next') if request.GET.contains('next') else reverse('login')
+
+            return render(request, self.template_name, {'next': next_url})
+
+        return render(request, 'signup/register_confirmation.html', {'error': 'invalid_code'})

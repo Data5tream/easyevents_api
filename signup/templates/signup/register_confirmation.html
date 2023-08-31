@@ -1,0 +1,10 @@
+{% extends 'signup/modal_layout.html' %}
+
+{% block modal %}
+    {% if error and error == 'invalid_code' %}
+        <p>Invalid confirmation code</p>
+    {% else %}
+        <p>Account confirmed correctly</p>
+        <p><a href="{{ next }}">Continue</a></p>
+    {% endif %}
+{% endblock %}
