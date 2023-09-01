@@ -11,6 +11,7 @@ from django.views.generic import TemplateView, DetailView
 from rest_framework import status
 
 from core.models import Event, EventUpdate, User, UserConfirmationCode
+from easyevents.settings import USER_WEBROOT
 
 
 # Create your views here.
@@ -37,6 +38,8 @@ class SignupView(DetailView):
         except Event.DoesNotExist:
             raise Http404
 
+        url = f"{USER_WEBROOT}{reverse('signup_view', kwargs={'pk': event.pk, 'title': event.title})}"
+
         if request.POST.get('action') == 'join':
             if event.creator == request.user:
                 messages.add_message(request, messages.ERROR, 'Can\'t join an event you have created.')
@@ -58,11 +61,9 @@ class SignupView(DetailView):
                     # Send event signup mail
                     send_mail(
                         f'Joined event {event.title} on Easy Events',
-                        'TEST',
-                        'test@localhost',
+                        f'You have successfully joined "{event.title}" by {event.creator.first_name} {event.creator.last_name}\n\nFor more information take a look at {url}',
+                        None,
                         [request.user.email],
-                        fail_silently=False,
-                        html_message=''
                     )
 
                     messages.add_message(request, messages.SUCCESS, 'Successfully joined event.')
@@ -85,10 +86,9 @@ class SignupView(DetailView):
                     # Send event signup mail
                     send_mail(
                         f'Left event {event.title} on Easy Events',
-                        'TEST',
-                        'test@localhost',
-                        [request.user.email],
-                        fail_silently=False,
+                        f'You have successfully left "{event.title}" by {event.creator.first_name} {event.creator.last_name}\n\nFor more information take a look at {url}',
+                        None,
+                        recipient_list=[request.user.email],
                     )
 
                     messages.add_message(request, messages.SUCCESS, 'Successfully left event.')
@@ -134,7 +134,7 @@ class RegisterView(TemplateView):
             code = UserConfirmationCode(user=user, code=token_urlsafe(32))
             code.save()
 
-            signup_link = f"{reverse('confirm_register')}?code={code.code}&next={next_url}"
+            signup_link = f"{USER_WEBROOT}{reverse('confirm_register')}?code={code.code}&next={next_url}"
 
             send_mail(
                 'Easy Events Account Registration',
