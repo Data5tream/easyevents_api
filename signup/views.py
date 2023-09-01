@@ -52,7 +52,7 @@ class SignupView(DetailView):
                     event_update = EventUpdate()
                     event_update.user = request.user
                     event_update.event = event
-                    event_update.type = 'joined'
+                    event_update.event_type = 'joined'
                     event_update.save()
 
                     # Send event signup mail
