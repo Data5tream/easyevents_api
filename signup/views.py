@@ -68,33 +68,33 @@ class SignupView(DetailView):
                     messages.add_message(request, messages.SUCCESS, 'Successfully joined event.')
                 else:
                     messages.add_message(request, messages.INFO, 'Already signed up for event.')
-            elif request.POST.get('action') == 'leave':
-                if event.signup_is_open:
-                    if request.user in event.participants.all():
-                        # Remove user from event participants
-                        event.participants.remove(request.user)
-                        event.save()
+        elif request.POST.get('action') == 'leave':
+            if event.signup_is_open:
+                if request.user in event.participants.all():
+                    # Remove user from event participants
+                    event.participants.remove(request.user)
+                    event.save()
 
-                        # Create event update
-                        event_update = EventUpdate()
-                        event_update.user = request.user
-                        event_update.event = event
-                        event_update.type = 'left'
-                        event_update.save()
+                    # Create event update
+                    event_update = EventUpdate()
+                    event_update.user = request.user
+                    event_update.event = event
+                    event_update.event_type = 'left'
+                    event_update.save()
 
-                        # Send event signup mail
-                        send_mail(
-                            f'Left event {event.title} on Easy Events',
-                            'TEST',
-                            'test@localhost',
-                            [request.user.email],
-                            fail_silently=False,
-                        )
+                    # Send event signup mail
+                    send_mail(
+                        f'Left event {event.title} on Easy Events',
+                        'TEST',
+                        'test@localhost',
+                        [request.user.email],
+                        fail_silently=False,
+                    )
 
-                        messages.add_message(request, messages.SUCCESS, 'Successfully left event.')
-                else:
-                    messages.add_message(request, messages.ERROR,
-                                         'Can\'t leave the event, because the signup has finished.')
+                    messages.add_message(request, messages.SUCCESS, 'Successfully left event.')
+            else:
+                messages.add_message(request, messages.ERROR,
+                                     'Can\'t leave the event, because the signup has finished.')
 
         return redirect('signup_view', pk=pk, title=title)
 

@@ -32,7 +32,7 @@
             </div>
             {% if event.signup_is_open %}
                 <form action="{% url 'signup_view' pk=event.pk title=event.title %}" method="post" class="text-center">
-                {% csrf_token %}
+                    {% csrf_token %}
                     <input type="hidden" name="action" value="leave">
                     <button type="submit" class="form-button">
                         Leave event
