@@ -13,5 +13,10 @@ DEFAULT_FROM_EMAIL = Used in notification emails
 ## Deployment
 
 ```bash
-docker run -p 8000:8000 -e SECRET_KEY=SEE_ABOVE -e USER_WEBROOT=SEE_ABOVE -e DEFAULT_FROM_EMAIL=SEE_ABOVE easyevents-api
+docker run \
+  -p 8000:8000 \
+  -e SECRET_KEY=SEE_ABOVE \
+  -e USER_WEBROOT=SEE_ABOVE \
+  -e DEFAULT_FROM_EMAIL=SEE_ABOVE \
+  easyevents-api
 ```

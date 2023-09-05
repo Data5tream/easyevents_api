@@ -139,10 +139,7 @@ INTERNAL_IPS = {
     '127.0.0.1',
 }
 
-CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:5173',
-    'http://localhost:5173',
-]
+CORS_ALLOWED_ORIGINS = [os.environ['USER_WEBROOT']]
 
 USER_WEBROOT = os.environ['USER_WEBROOT']
 DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
