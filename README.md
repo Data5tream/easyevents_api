@@ -2,6 +2,8 @@
 
 Django app that handles the API and the end-users
 
+For client-side, take a look at [easyevents_spa](https://github.com/Data5tream/easyevents_spa).
+
 ## Environment
 
 ```
