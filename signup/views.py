@@ -164,7 +164,7 @@ class ConfirmRegister(TemplateView):
             code.used = True
             code.save()
 
-            next_url = request.GET.get('next') if request.GET.contains('next') else reverse('login')
+            next_url = request.GET.get('next') if 'next' in request.GET else reverse('login')
 
             return render(request, self.template_name, {'next': next_url})
 
